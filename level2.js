@@ -16,6 +16,8 @@ var snakeBody = [];
 var foodX;
 var foodY;
 
+var obstacles = []; 
+
 var gameOver = false;
 
 var score = 0;  
@@ -30,8 +32,24 @@ window.onload = function () {
     updateScore();
 
     placeFood();
+    addObstacle(blockSize * 8, blockSize * 5);
+    addObstacle(blockSize * 10, blockSize * 12);
+
     document.addEventListener("keyup", changeDirection);  //for movements
     setInterval(update, 1500 / 10);
+}
+
+function addObstacle(x, y) {
+    obstacles.push([x, y]);
+}
+
+function isObstacle(x, y) {
+    for (let i = 0; i < obstacles.length; i++) {
+        if (x === obstacles[i][0] && y === obstacles[i][1]) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function update() {
@@ -44,6 +62,13 @@ function update() {
 
     context.fillStyle = "red";
     context.fillRect(foodX, foodY, blockSize, blockSize);
+
+
+    context.fillStyle = "black";
+    for (let i = 0; i < obstacles.length; i++) {
+         context.fillRect(obstacles[i][0], obstacles[i][1], blockSize, blockSize);
+    }
+    
 
     if (snakeX == foodX && snakeY == foodY) {
         snakeBody.push([foodX, foodY]);
