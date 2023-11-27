@@ -19,7 +19,7 @@ var foodY;
 var gameOver = false;
 
 var score = 0;  
-var targetScore = 8;  
+var targetScore = 10;  
 
 window.onload = function () {
     board = document.getElementById("board");
