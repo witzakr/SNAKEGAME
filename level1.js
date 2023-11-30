@@ -22,7 +22,7 @@ function draw() {
 }
 
 function update() {
-  const head = Object.assign({}, snake[0]); 
+  const head = Object.assign({}, snake[0]);                       // create a copy of the snake's head to avoid modifying the original array directly   
   switch (direction) {
     case 'up':
       head.y--;
@@ -63,7 +63,7 @@ function update() {
 }
 
 function collision(obj1, obj2) {                                            // Collision function 
-  return obj2.some(function (segment) {                                     // 
+  return obj2.some(function (segment) {                                     //
     return segment.x === obj1.x && segment.y === obj1.y;                    // checks the coordinates, to see if there was a collision
   });
 }
@@ -82,13 +82,13 @@ function gameLoop() {
 
 function startGame() {
   spawnFood();
-  gameInterval = setInterval(gameLoop, 100);
+  gameInterval = setInterval(gameLoop, 100);                             // updates the game every 100 miliseconds
 }
 
 function resetGame() {
   clearInterval(gameInterval);
   gameInterval = null;
-  gameStarted = false;                                                       
+  gameStarted = false;                                                       //reseting the game
   snake = [{ x: 10, y: 10 }];
   score = 0;
 }

@@ -17,7 +17,7 @@ function draw() {
   ctx.fillStyle = 'red';
   drawFood();
 
-  ctx.fillStyle = 'black';
+  ctx.fillStyle = 'black';                    //drawing obstacles
   obstacles.forEach(drawObstacle);
 
   ctx.fillStyle = 'black';
@@ -83,12 +83,12 @@ function spawnFood() {
 function spawnObstacle() {
   const obstacle = {
     x: Math.floor(Math.random() * (canvas.width / boxSize)),
-    y: Math.floor(Math.random() * (canvas.height / boxSize))                                // Obstacle coordinates
+    y: Math.floor(Math.random() * (canvas.height / boxSize))                       // coordinates for obstacles       
   };
 
   while (collision(obstacle, snake) || collision(obstacle, [food]) || collision(obstacle, obstacles)) {
     obstacle.x = Math.floor(Math.random() * (canvas.width / boxSize));
-    obstacle.y = Math.floor(Math.random() * (canvas.height / boxSize));
+    obstacle.y = Math.floor(Math.random() * (canvas.height / boxSize));                             // ensuring that obstacle doesnt cover food or the snake
   }
 
   obstacles.push(obstacle);
@@ -123,7 +123,7 @@ function drawFood() {
 }
 
 function drawObstacle(obstacle) {
-  ctx.fillRect(obstacle.x * boxSize, obstacle.y * boxSize, boxSize, boxSize);
+  ctx.fillRect(obstacle.x * boxSize, obstacle.y * boxSize, boxSize, boxSize);      //drawing obstacles function
 }
 
 function drawScore() {
@@ -162,6 +162,6 @@ document.addEventListener('keydown', function (event) {
 
 setInterval(function () {
   if (gameStarted) {
-    spawnObstacle();
+    spawnObstacle();                             //spawing obstacles every 5 seconds
   }
 }, 5000);

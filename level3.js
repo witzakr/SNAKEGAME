@@ -72,7 +72,7 @@ function update() {
     }
 
     spawnRottenFood();
-  } else {
+  } else {                                  //spawing rotten food
     snake.unshift(head);
     snake.pop();
   }
@@ -91,11 +91,11 @@ function collision(obj1, obj2) {
 }
 
 function spawnFood() {
-  food = generateFood();
+  food = generateFood();         
 }
 
 function spawnRottenFood() {
-  rottenFood = generateFood();
+  rottenFood = generateFood();    //function for spawing rotten food
 }
 
 function spawnObstacle() {
@@ -152,7 +152,7 @@ function drawFood() {
 }
 
 function drawRottenFood() {
-  ctx.fillRect(rottenFood.x * boxSize, rottenFood.y * boxSize, boxSize, boxSize);
+  ctx.fillRect(rottenFood.x * boxSize, rottenFood.y * boxSize, boxSize, boxSize);        // function that draws rotten food 
 }
 
 function drawObstacle(obstacle) {
