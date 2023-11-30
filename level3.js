@@ -4,8 +4,6 @@ const ctx = canvas.getContext('2d');
 
 const boxSize = 20;
 let snake = [{ x: 10, y: 10 }];
-let food = { x: 15, y: 15 };
-let rottenFood = {};
 let obstacles = [];
 let score = 0;
 let gameStarted = false;
@@ -19,7 +17,7 @@ function draw() {
   ctx.fillStyle = 'red';
   drawFood();
 
-  ctx.fillStyle = 'purple';
+  ctx.fillStyle = 'red';
   drawRottenFood();                                         // drawing rotten food
 
   ctx.fillStyle = 'black';

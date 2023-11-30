@@ -2,8 +2,7 @@ const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
 
 const boxSize = 20;
-let snake = [{ x: 10, y: 10 }];
-let food = { x: 15, y: 15 };                                    // Variables 
+let snake = [{ x: 10, y: 10 }];                                // Variables 
 let score = 0;
 let gameStarted = false;
 let gameInterval;
@@ -63,7 +62,7 @@ function update() {
 }
 
 function collision(obj1, obj2) {                                            // Collision function 
-  return obj2.some(function (segment) {                                     //
+  return obj2.some(function (segment) {                                     
     return segment.x === obj1.x && segment.y === obj1.y;                    // checks the coordinates, to see if there was a collision
   });
 }
