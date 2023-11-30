@@ -1,118 +1,136 @@
-var blockSize = 25;
-var total_row = 17; 
-var total_col = 17; 
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
 
-var board;
-var context;
+const boxSize = 20;
+let snake = [{ x: 10, y: 10 }];
+let food = { x: 15, y: 15 };                                    // Variables 
+let score = 0;
+let gameStarted = false;
+let gameInterval;
 
-var snakeX = blockSize * 5;
-var snakeY = blockSize * 5;
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'white';                                        // Drawing the snake
+  snake.forEach(drawSnakeSegment);
 
-var speedX = 0;  
-var speedY = 0;  
+  ctx.fillStyle = 'red';                                          // Drawing the food
+  drawFood();
 
-var snakeBody = [];
-
-var foodX;
-var foodY;
-
-var gameOver = false;
-
-var score = 0;  
-var targetScore = 10;  
-
-window.onload = function () {
-    board = document.getElementById("board");
-    board.height = total_row * blockSize;
-    board.width = total_col * blockSize;
-    context = board.getContext("2d");
-
-    updateScore();
-
-    placeFood();
-    document.addEventListener("keyup", changeDirection);  //for movements
-    setInterval(update, 1500 / 10);
+  ctx.fillStyle = 'black';
+  ctx.font = '20px Arial';                                        // Drawing the score
+  drawScore();
 }
 
 function update() {
-    if (gameOver) {
-        return;
+  const head = Object.assign({}, snake[0]); 
+  switch (direction) {
+    case 'up':
+      head.y--;
+      break;
+    case 'down':                                             // Snake movement
+      head.y++;
+      break;
+    case 'left':
+      head.x--;
+      break;
+    case 'right':
+      head.x++;
+      break;
+  }
+
+  if (
+    head.x < 0 || head.x >= canvas.width / boxSize ||
+    head.y < 0 || head.y >= canvas.height / boxSize ||                   // If statment if the snake hits the border
+    collision(head, snake)
+  ) {
+    alert('Game Over! Your Score: ' + score);
+    resetGame();
+  }
+
+  if (collision(head, [food])) {
+    snake.unshift(food);                                                // If statments if snake eats food
+    spawnFood();
+    score += 1;
+
+    if (score >= 10) {
+      alert('Congratulations! You reached 10 points. Game Over!');       // If statments for ending the game if score hits the proper number
+      resetGame();
     }
-
-    context.fillStyle = "green";
-    context.fillRect(0, 0, board.width, board.height);
-
-    context.fillStyle = "red";
-    context.fillRect(foodX, foodY, blockSize, blockSize);
-
-    if (snakeX == foodX && snakeY == foodY) {
-        snakeBody.push([foodX, foodY]);
-        placeFood();
-        score++;
-        updateScore();
-
-        if (score >= targetScore) {
-            gameOver = true;
-            alert("Congratulations! You've won the game!");
-        }
-    }
-
-    for (let i = snakeBody.length - 1; i > 0; i--) {
-        snakeBody[i] = snakeBody[i - 1];
-    }
-    if (snakeBody.length) {
-        snakeBody[0] = [snakeX, snakeY];
-    }
-
-    context.fillStyle = "white";
-    snakeX += speedX * blockSize; 
-    snakeY += speedY * blockSize;  
-    context.fillRect(snakeX, snakeY, blockSize, blockSize);
-    for (let i = 0; i < snakeBody.length; i++) {
-        context.fillRect(snakeBody[i][0], snakeBody[i][1], blockSize, blockSize);
-    }
-
-    if (snakeX < 0 
-        || snakeX > total_col * blockSize 
-        || snakeY < 0 
-        || snakeY > total_row * blockSize) { 
-        gameOver = true;
-        alert("Game Over. Your Score: " + score);
-    }
-
-    for (let i = 0; i < snakeBody.length; i++) {
-        if (snakeX == snakeBody[i][0] && snakeY == snakeBody[i][1]) { 
-            gameOver = true;
-            alert("Game Over. Your Score: " + score);
-        }
-    }
+  } else {
+    snake.unshift(head);
+    snake.pop();                                                         // If there was no collision
+  }
 }
 
-
-function changeDirection(e) {
-    if (e.code == "KeyW" && speedY != 1) {
-        speedX = 0;
-        speedY = -1;
-    } else if (e.code == "KeyS" && speedY != -1) {
-        speedX = 0;
-        speedY = 1;
-    } else if (e.code == "KeyA" && speedX != 1) {
-        speedX = -1;
-        speedY = 0;
-    } else if (e.code == "KeyD" && speedX != -1) {
-        speedX = 1;
-        speedY = 0;
-    }
+function collision(obj1, obj2) {                                            // Collision function 
+  return obj2.some(function (segment) {                                     // 
+    return segment.x === obj1.x && segment.y === obj1.y;                    // checks the coordinates, to see if there was a collision
+  });
 }
 
-function placeFood() {
-    foodX = Math.floor(Math.random() * total_col) * blockSize; 
-    foodY = Math.floor(Math.random() * total_row) * blockSize; 
+function spawnFood() {
+  food = {
+    x: Math.floor(Math.random() * (canvas.width / boxSize)),              // Spawning foood function 
+    y: Math.floor(Math.random() * (canvas.height / boxSize))
+  };
 }
 
-function updateScore() {
-    var scoreElement = document.getElementById("score");
-    if (scoreElement) {
-        scoreElement.innerHTML = "Score: " + score;
-    }
+function gameLoop() {
+  update();                                                               // Keeping the game in loop
+  draw();
 }
+
+function startGame() {
+  spawnFood();
+  gameInterval = setInterval(gameLoop, 100);
+}
+
+function resetGame() {
+  clearInterval(gameInterval);
+  gameInterval = null;
+  gameStarted = false;                                                       
+  snake = [{ x: 10, y: 10 }];
+  score = 0;
+}
+
+function drawSnakeSegment(segment) {          
+  ctx.fillRect(segment.x * boxSize, segment.y * boxSize, boxSize, boxSize);             // Drawing snake function
+}
+
+function drawFood() {
+  ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);                  // Drawing food function
+}
+
+function drawScore() {
+  ctx.fillText('Score: ' + score, 10, 20);                                             // Drawing score function
+}
+
+document.addEventListener('keydown', function (event) {
+  if (!gameStarted) {
+    startGame();                                                                // If key was pressed, start the game
+    gameStarted = true;                                                            
+  }
+
+  switch (event.key) {
+    case 'ArrowUp':
+    case 'W':
+    case 'w':
+      direction = 'up';
+      break;
+    case 'ArrowDown':
+    case 'S':                                                                      // Moving the snake with arrows or wsad
+    case 's':
+      direction = 'down';
+      break;
+    case 'ArrowLeft':
+    case 'A':
+    case 'a':
+      direction = 'left';
+      break;
+    case 'ArrowRight':
+    case 'D':
+    case 'd':
+      direction = 'right';
+      break;
+  }
+});

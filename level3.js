@@ -1,9 +1,11 @@
 const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
 
+
 const boxSize = 20;
 let snake = [{ x: 10, y: 10 }];
 let food = { x: 15, y: 15 };
+let rottenFood = {};
 let obstacles = [];
 let score = 0;
 let gameStarted = false;
@@ -17,6 +19,9 @@ function draw() {
   ctx.fillStyle = 'red';
   drawFood();
 
+  ctx.fillStyle = 'purple';
+  drawRottenFood();                                         // drawing rotten food
+
   ctx.fillStyle = 'black';
   obstacles.forEach(drawObstacle);
 
@@ -26,7 +31,7 @@ function draw() {
 }
 
 function update() {
-  const head = Object.assign({}, snake[0]); 
+  const head = Object.assign({}, snake[0]);
   switch (direction) {
     case 'up':
       head.y--;
@@ -54,18 +59,30 @@ function update() {
 
   if (collision(head, [food])) {
     snake.unshift(food);
-    spawnFood();                                       
+    spawnFood();
     score += 1;
-
-    if (score >= 10) {
-      alert('Congratulations! You reached 10 points. Game Over!');
+  } else if (collision(head, [rottenFood])) {
+    if (score > 0) {
+      snake.pop(); 
+      score -= 1;
+    } else {
+      alert('Game Over! Your Score: 0');
       resetGame();
+      return;
     }
+
+    spawnRottenFood();
   } else {
     snake.unshift(head);
     snake.pop();
   }
+
+  if (score >= 10) {
+    alert('Congratulations! You reached 10 points. Game Over!');
+    resetGame();
+  }
 }
+  
 
 function collision(obj1, obj2) {
   return obj2.some(function (segment) {
@@ -74,24 +91,34 @@ function collision(obj1, obj2) {
 }
 
 function spawnFood() {
-  food = {
-    x: Math.floor(Math.random() * (canvas.width / boxSize)),
-    y: Math.floor(Math.random() * (canvas.height / boxSize))
-  };
+  food = generateFood();
+}
+
+function spawnRottenFood() {
+  rottenFood = generateFood();
 }
 
 function spawnObstacle() {
-  const obstacle = {
-    x: Math.floor(Math.random() * (canvas.width / boxSize)),
-    y: Math.floor(Math.random() * (canvas.height / boxSize))                                // Obstacle coordinates
-  };
-
-  while (collision(obstacle, snake) || collision(obstacle, [food]) || collision(obstacle, obstacles)) {
+  const obstacle = generateFood();
+  
+  while (
+    collision(obstacle, snake) ||
+    collision(obstacle, [food]) ||
+    collision(obstacle, [rottenFood]) ||
+    collision(obstacle, obstacles)
+  ) {
     obstacle.x = Math.floor(Math.random() * (canvas.width / boxSize));
     obstacle.y = Math.floor(Math.random() * (canvas.height / boxSize));
   }
 
   obstacles.push(obstacle);
+}
+
+function generateFood() {
+  return {
+    x: Math.floor(Math.random() * (canvas.width / boxSize)),
+    y: Math.floor(Math.random() * (canvas.height / boxSize))
+  };
 }
 
 function gameLoop() {
@@ -101,6 +128,7 @@ function gameLoop() {
 
 function startGame() {
   spawnFood();
+  spawnRottenFood();
   spawnObstacle();
   gameInterval = setInterval(gameLoop, 100);
 }
@@ -110,6 +138,7 @@ function resetGame() {
   gameInterval = null;
   gameStarted = false;
   snake = [{ x: 10, y: 10 }];
+  direction = 'right';
   score = 0;
   obstacles = [];
 }
@@ -120,6 +149,10 @@ function drawSnakeSegment(segment) {
 
 function drawFood() {
   ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);
+}
+
+function drawRottenFood() {
+  ctx.fillRect(rottenFood.x * boxSize, rottenFood.y * boxSize, boxSize, boxSize);
 }
 
 function drawObstacle(obstacle) {
