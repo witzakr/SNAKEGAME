@@ -79,7 +79,7 @@ This piece of code essentially figures out where the snake's head should be afte
         https://github.com/witzakr/SNAKEGAME/blob/f5c223e15c089f7db0c20bd101d4a05f6cc38f8a/level2.js#L82-L94
         The function can be divided into two parts, one for rendering the obstacle and one for ensuring that the obstacle won't overlap with the snake or food.
       - Updating start game function:
-        https://github.com/witzakr/SNAKEGAME/blob/f5c223e15c089f7db0c20bd101d4a05f6cc38f8a/level2.js#L6
+        https://github.com/witzakr/SNAKEGAME/blob/f9e83f048dbd18cbb9384fd6b56ff21d544507da/level2.js#L101-L105
         Modification makes obstacles spawn at the beginning of the game.
       - Updating the reset game function:
         https://github.com/witzakr/SNAKEGAME/blob/f5c223e15c089f7db0c20bd101d4a05f6cc38f8a/level2.js#L107-L114
