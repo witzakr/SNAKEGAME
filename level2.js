@@ -57,7 +57,7 @@ function update() {
     score += 1;
 
     if (score >= 10) {
-      alert('Congratulations! You reached 10 points. Game Over!');
+      alert('Congratulations! You beat the level. Game Over!');   
       resetGame();
     }
   } else {

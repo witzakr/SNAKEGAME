@@ -1,40 +1,32 @@
 const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
 
-
 const boxSize = 20;
-let snake = [{ x: 10, y: 10 }];
-let obstacles = [];
+let snake = [{ x: 10, y: 10 }];                                // Variables 
 let score = 0;
 let gameStarted = false;
 let gameInterval;
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = 'white';                                        // Drawing the snake
   snake.forEach(drawSnakeSegment);
 
-  ctx.fillStyle = 'red';
+  ctx.fillStyle = 'red';                                          // Drawing the food
   drawFood();
 
-  ctx.fillStyle = 'red';
-  drawRottenFood();                                         // drawing rotten food
-
   ctx.fillStyle = 'black';
-  obstacles.forEach(drawObstacle);
-
-  ctx.fillStyle = 'black';
-  ctx.font = '20px Arial';
+  ctx.font = '20px Arial';                                        // Drawing the score
   drawScore();
 }
 
 function update() {
-  const head = Object.assign({}, snake[0]);
+  const head = Object.assign({}, snake[0]);                       // create a copy of the snake's head to avoid modifying the original array directly   
   switch (direction) {
     case 'up':
       head.y--;
       break;
-    case 'down':
+    case 'down':                                             // Snake movement
       head.y++;
       break;
     case 'left':
@@ -47,124 +39,70 @@ function update() {
 
   if (
     head.x < 0 || head.x >= canvas.width / boxSize ||
-    head.y < 0 || head.y >= canvas.height / boxSize ||
-    collision(head, snake) ||
-    collision(head, obstacles)
+    head.y < 0 || head.y >= canvas.height / boxSize ||                   // If statment if the snake hits the border
+    collision(head, snake)
   ) {
     alert('Game Over! Your Score: ' + score);
     resetGame();
   }
 
   if (collision(head, [food])) {
-    snake.unshift(food);
+    snake.unshift(food);                                                // If statments if snake eats food
     spawnFood();
     score += 1;
-  } else if (collision(head, [rottenFood])) {
-    if (score > 0) {
-      snake.pop(); 
-      score -= 1;
-    } else {
-      alert('Game Over! Your Score: 0');
-      resetGame();
-      return;
-    }
-
-    spawnRottenFood();
-  } else {                                  //spawing rotten food
+  } else {
     snake.unshift(head);
-    snake.pop();
-  }
-
-  if (score >= 10) {
-    alert('Congratulations! You reached 10 points. Game Over!');
-    resetGame();
+    snake.pop();                                                         // If there was no collision
   }
 }
-  
 
-function collision(obj1, obj2) {
-  return obj2.some(function (segment) {
-    return segment.x === obj1.x && segment.y === obj1.y;
+function collision(obj1, obj2) {                                            // Collision function 
+  return obj2.some(function (segment) {                                     
+    return segment.x === obj1.x && segment.y === obj1.y;                    // checks the coordinates, to see if there was a collision
   });
 }
 
 function spawnFood() {
-  food = generateFood();         
-}
-
-function spawnRottenFood() {
-  rottenFood = generateFood();    //function for spawing rotten food
-}
-
-function spawnObstacle() {
-  const obstacle = generateFood();
-  
-  while (
-    collision(obstacle, snake) ||
-    collision(obstacle, [food]) ||
-    collision(obstacle, [rottenFood]) ||
-    collision(obstacle, obstacles)
-  ) {
-    obstacle.x = Math.floor(Math.random() * (canvas.width / boxSize));
-    obstacle.y = Math.floor(Math.random() * (canvas.height / boxSize));
-  }
-
-  obstacles.push(obstacle);
-}
-
-function generateFood() {
-  return {
-    x: Math.floor(Math.random() * (canvas.width / boxSize)),
+  food = {
+    x: Math.floor(Math.random() * (canvas.width / boxSize)),              // Spawning foood function 
     y: Math.floor(Math.random() * (canvas.height / boxSize))
   };
 }
 
 function gameLoop() {
-  update();
+  update();                                                               // Keeping the game in loop
   draw();
 }
 
 function startGame() {
   spawnFood();
-  spawnRottenFood();
-  spawnObstacle();
-  gameInterval = setInterval(gameLoop, 100);
+  gameInterval = setInterval(gameLoop, 100);                             // updates the game every 100 miliseconds
 }
 
 function resetGame() {
   clearInterval(gameInterval);
   gameInterval = null;
-  gameStarted = false;
+  gameStarted = false;                                                       //reseting the game
   snake = [{ x: 10, y: 10 }];
-  direction = 'right';
   score = 0;
-  obstacles = [];
 }
 
-function drawSnakeSegment(segment) {
-  ctx.fillRect(segment.x * boxSize, segment.y * boxSize, boxSize, boxSize);
+function drawSnakeSegment(segment) {          
+  ctx.fillRect(segment.x * boxSize, segment.y * boxSize, boxSize, boxSize);             // Drawing snake function
 }
 
 function drawFood() {
-  ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);
-}
-
-function drawRottenFood() {
-  ctx.fillRect(rottenFood.x * boxSize, rottenFood.y * boxSize, boxSize, boxSize);        // function that draws rotten food 
-}
-
-function drawObstacle(obstacle) {
-  ctx.fillRect(obstacle.x * boxSize, obstacle.y * boxSize, boxSize, boxSize);
+  ctx.fillRect(food.x * boxSize, food.y * boxSize, boxSize, boxSize);                  // Drawing food function
 }
 
 function drawScore() {
-  ctx.fillText('Score: ' + score, 10, 20);
+  ctx.fillText('Score: ' + score, 10, 20);                                             // Drawing score function
 }
 
 document.addEventListener('keydown', function (event) {
   if (!gameStarted) {
-    startGame();
-    gameStarted = true;
+    startGame();                                                                // If key was pressed, start the game
+    gameStarted = true;                                                            
   }
 
   switch (event.key) {
@@ -174,7 +112,7 @@ document.addEventListener('keydown', function (event) {
       direction = 'up';
       break;
     case 'ArrowDown':
-    case 'S':
+    case 'S':                                                                      // Moving the snake with arrows or wsad
     case 's':
       direction = 'down';
       break;
@@ -190,9 +128,3 @@ document.addEventListener('keydown', function (event) {
       break;
   }
 });
-
-setInterval(function () {
-  if (gameStarted) {
-    spawnObstacle();
-  }
-}, 5000);
