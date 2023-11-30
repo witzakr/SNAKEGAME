@@ -4,7 +4,7 @@ https://github.com/witzakr/SNAKEGAME/blob/2364e89a9942384220e13c9bde6b2c2985b78d
 These lines help create a space (canvas) where the game will happen and get the tools ready to draw everything you see in the game.
 
 2. Setting up variables
-https://github.com/witzakr/SNAKEGAME/blob/2364e89a9942384220e13c9bde6b2c2985b78dc8/level1.js#L4-L9
+https://github.com/witzakr/SNAKEGAME/blob/f4a04da5043dcbbafbefad6981de5cd6c09b413a/level1.js#L4-L8
 
 3. Draw function
 https://github.com/witzakr/SNAKEGAME/blob/2364e89a9942384220e13c9bde6b2c2985b78dc8/level1.js#L11-L22
