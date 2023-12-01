@@ -101,6 +101,7 @@ Research:
 - https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/fillRect
 - https://www.geeksforgeeks.org/create-a-snake-game-using-html-css-and-javascript/
 - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/floor
+- https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 ----------------------------------------------------------------------------------------------
 Summary:
 Overall making the snake game was a quite challenging task. It was definitely something new and it took me a while to finish this. It required plenty of research and learning new things, but eventually, I managed to finish it. 
